@@ -176,6 +176,8 @@ export const ConfigModal = ({ isOpen, onClose }: ConfigModalProps) => {
     }
   };
 
+  const isAndroid = typeof window !== 'undefined' && !!window.Android;
+
   const handleCustomSoundUpload = async (soundType: keyof typeof customSounds, file: File | null) => {
     if (!isPremium) {
       toast({
@@ -200,6 +202,52 @@ export const ConfigModal = ({ isOpen, onClose }: ConfigModalProps) => {
       });
     }
   };
+
+  const handleNativeFileUpload = (soundType: keyof typeof customSounds) => {
+    if (!isPremium) {
+      toast({
+        title: "Funcionalidade Premium",
+        description: "O upload de sons personalizados é exclusivo para contas Premium. Faça upgrade para acessar!",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (isAndroid && window.Android?.openFileChooser) {
+      // Set up callback for file selection
+      window.onFileSelected = async (fileDataUrl: string, fileName: string, fileType: string) => {
+        try {
+          // Convert data URL to File object for the existing setCustomSound function
+          const response = await fetch(fileDataUrl);
+          const blob = await response.blob();
+          const file = new File([blob], fileName, { type: fileType });
+          
+          await setCustomSound(soundType, file);
+          toast({
+            title: "Som personalizado salvo!",
+            description: "Seu som personalizado foi configurado",
+          });
+        } catch (error) {
+          toast({
+            title: "Erro",
+            description: "Não foi possível configurar o som personalizado",
+            variant: "destructive",
+          });
+        }
+      };
+
+      // Open native file chooser for audio files
+      window.Android.openFileChooser("audio/*");
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (isAndroid) {
+        window.onFileSelected = undefined;
+      }
+    };
+  }, [isAndroid]);
 
   const SoundCustomizer = ({ 
     soundType, 
@@ -243,28 +291,42 @@ export const ConfigModal = ({ isOpen, onClose }: ConfigModalProps) => {
             
             <PremiumOverlay isBlocked={!isPremium} replaceContent={true}>
               <div className="relative">
-                <input
-                  type="file"
-                  accept="audio/*"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0] || null;
-                    handleCustomSoundUpload(soundType, file);
-                  }}
-                  className="absolute inset-0 opacity-0 cursor-pointer"
-                  id={`upload-${soundType}`}
-                  disabled={!isPremium}
-                />
-                <Button
-                  size="sm"
-                  variant={hasCustomSound ? "default" : "outline"}
-                  asChild
-                  disabled={!isPremium}
-                >
-                  <label htmlFor={`upload-${soundType}`} className="cursor-pointer">
+                {!isAndroid ? (
+                  <>
+                    <input
+                      type="file"
+                      accept="audio/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0] || null;
+                        handleCustomSoundUpload(soundType, file);
+                      }}
+                      className="absolute inset-0 opacity-0 cursor-pointer"
+                      id={`upload-${soundType}`}
+                      disabled={!isPremium}
+                    />
+                    <Button
+                      size="sm"
+                      variant={hasCustomSound ? "default" : "outline"}
+                      asChild
+                      disabled={!isPremium}
+                    >
+                      <label htmlFor={`upload-${soundType}`} className="cursor-pointer">
+                        <Upload className="w-3 h-3 mr-1" />
+                        {hasCustomSound ? "Trocar" : "Upload"}
+                      </label>
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    size="sm"
+                    variant={hasCustomSound ? "default" : "outline"}
+                    onClick={() => handleNativeFileUpload(soundType)}
+                    disabled={!isPremium}
+                  >
                     <Upload className="w-3 h-3 mr-1" />
                     {hasCustomSound ? "Trocar" : "Upload"}
-                  </label>
-                </Button>
+                  </Button>
+                )}
               </div>
             </PremiumOverlay>
             

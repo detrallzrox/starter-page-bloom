@@ -56,12 +56,15 @@ import com.android.billingclient.api.SkuDetailsParams;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int PERMISSIONS_REQUEST_CODE = 123;
+    private static final int CAMERA_REQUEST_CODE = 1;
+    public static final int RC_SIGN_IN = 1001;
+    private static final int GALLERY_REQUEST_CODE = 2;
+    private static final int FILE_CHOOSER_REQUEST_CODE = 3;
     private static MainActivity instance;
+
     private WebView webView;
     private BillingClient billingClient;
-    private static final int PERMISSIONS_REQUEST_CODE = 101;
-    private static final int CAMERA_REQUEST_CODE = 102;
-    public static final int RC_SIGN_IN = 9001; // Google Sign-In request code
     private MediaRecorder mediaRecorder;
     private String audioFilePath = null;
 
@@ -211,6 +214,27 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void openGallery() {
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        galleryIntent.setType("image/*");
+        if (galleryIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(galleryIntent, GALLERY_REQUEST_CODE);
+        } else {
+            Toast.makeText(this, "Nenhum app de galeria encontrado", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void openFileChooser(String acceptType) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType(acceptType);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(Intent.createChooser(intent, "Escolher arquivo"), FILE_CHOOSER_REQUEST_CODE);
+        } else {
+            Toast.makeText(this, "Nenhum app para escolher arquivos encontrado", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public void openCamera() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestSpecificPermission(Manifest.permission.CAMERA);
@@ -353,6 +377,53 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         
+        // Tratar resultado da galeria
+        else if (requestCode == GALLERY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            if (data != null && data.getData() != null) {
+                Uri imageUri = data.getData();
+                try {
+                    InputStream inputStream = getContentResolver().openInputStream(imageUri);
+                    Bitmap bitmap = android.graphics.BitmapFactory.decodeStream(inputStream);
+                    if (bitmap != null) {
+                        sendGalleryImageAsBase64(bitmap);
+                    }
+                    inputStream.close();
+                } catch (Exception e) {
+                    Log.e("MainActivity", "Erro ao processar imagem da galeria", e);
+                    Toast.makeText(this, "Erro ao processar imagem", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+        
+        // Tratar resultado do file chooser
+        else if (requestCode == FILE_CHOOSER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            if (data != null && data.getData() != null) {
+                Uri fileUri = data.getData();
+                try {
+                    String fileName = getFileName(fileUri);
+                    String mimeType = getContentResolver().getType(fileUri);
+                    
+                    InputStream inputStream = getContentResolver().openInputStream(fileUri);
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    byte[] buffer = new byte[1024];
+                    int bytesRead;
+                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        byteArrayOutputStream.write(buffer, 0, bytesRead);
+                    }
+                    inputStream.close();
+                    
+                    byte[] fileBytes = byteArrayOutputStream.toByteArray();
+                    String base64File = Base64.encodeToString(fileBytes, Base64.NO_WRAP);
+                    String fileDataUrl = "data:" + mimeType + ";base64," + base64File;
+                    
+                    sendFileAsBase64(fileDataUrl, fileName, mimeType);
+                } catch (Exception e) {
+                    Log.e("MainActivity", "Erro ao processar arquivo", e);
+                    Toast.makeText(this, "Erro ao processar arquivo", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+        
         // Tratar resultado do Google Sign-In
         else if (requestCode == RC_SIGN_IN) {
             Log.d("MainActivity", "📱 Resultado do Google Sign-In recebido");
@@ -422,6 +493,44 @@ public class MainActivity extends AppCompatActivity {
                 sendGoogleSignInError(errorMessage);
             }
         }
+    }
+
+    private String getFileName(Uri uri) {
+        String fileName = "unknown";
+        if (uri.getScheme().equals("content")) {
+            android.database.Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    int nameIndex = cursor.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME);
+                    if (nameIndex != -1) {
+                        fileName = cursor.getString(nameIndex);
+                    }
+                }
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+        }
+        return fileName;
+    }
+
+    private void sendGalleryImageAsBase64(Bitmap bitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+        String base64Image = Base64.encodeToString(byteArray, Base64.NO_WRAP);
+        
+        String imageDataUrl = "data:image/jpeg;base64," + base64Image;
+
+        String script = String.format("javascript:onGalleryImageSelected('%s');", imageDataUrl);
+        runOnUiThread(() -> webView.evaluateJavascript(script, null));
+    }
+
+    private void sendFileAsBase64(String fileDataUrl, String fileName, String mimeType) {
+        String script = String.format("javascript:onFileSelected('%s', '%s', '%s');", 
+            fileDataUrl, fileName, mimeType);
+        runOnUiThread(() -> webView.evaluateJavascript(script, null));
     }
     
     private void sendGoogleSignInError(String error) {

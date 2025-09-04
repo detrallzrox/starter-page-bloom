@@ -196,9 +196,30 @@ export const CameraOCR = ({ onTransactionAdd }: CameraOCRProps) => {
     reader.readAsDataURL(file);
   }, [processImage]);
 
+  const isAndroid = typeof window !== 'undefined' && !!window.Android;
+
   const handleOpenGallery = () => {
-    fileInputRef.current?.click();
+    if (isAndroid && window.Android?.openGallery) {
+      // Use native Android gallery
+      window.Android.openGallery();
+    } else {
+      // Use web file input
+      fileInputRef.current?.click();
+    }
   };
+
+  useEffect(() => {
+    if (isAndroid) {
+      // Set up callback for Android gallery selection
+      window.onGalleryImageSelected = (imageDataUrl: string) => {
+        processImage(imageDataUrl);
+      };
+
+      return () => {
+        window.onGalleryImageSelected = undefined;
+      };
+    }
+  }, [processImage, isAndroid]);
 
   const handleSaveTransaction = () => {
     // Esta função agora é um fallback e pode ser removida se não for mais necessária

@@ -107,6 +107,20 @@ public class WebAppInterface {
     }
 
     @JavascriptInterface
+    public void openGallery() {
+        if (mContext instanceof MainActivity) {
+            ((MainActivity) mContext).openGallery();
+        }
+    }
+
+    @JavascriptInterface
+    public void openFileChooser(String acceptType) {
+        if (mContext instanceof MainActivity) {
+            ((MainActivity) mContext).openFileChooser(acceptType);
+        }
+    }
+
+    @JavascriptInterface
     public void signInWithGoogle() {
         Log.d("WebAppInterface", "🚀 signInWithGoogle() chamado pelo JavaScript!");
         

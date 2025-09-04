@@ -13,6 +13,9 @@ interface WebAppInterface {
   launchPurchaseFlow: (productId: string) => void;
   // Google Auth methods
   signInWithGoogle: () => void;
+  // File system methods
+  openGallery: () => void;
+  openFileChooser: (acceptType: string) => void;
 }
 
 // Estende a interface global `Window` para incluir nossos métodos e callbacks customizados
@@ -31,6 +34,9 @@ declare global {
     // Google Auth callbacks
     onGoogleSignInSuccess?: (idToken: string, accessToken?: string) => void;
     onGoogleSignInError?: (error: string) => void;
+    // File selection callbacks
+    onGalleryImageSelected?: (imageDataUrl: string) => void;
+    onFileSelected?: (fileDataUrl: string, fileName: string, fileType: string) => void;
   }
 }
 
