@@ -1,0 +1,334 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Finaudy Design System - Financial App Theme
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+
+    /* Financial Green Theme */
+    --primary: 142 71% 45%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 142 71% 55%;
+    --primary-dark: 142 71% 35%;
+
+    --secondary: 142 45% 96%;
+    --secondary-foreground: 142 71% 25%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 142 45% 96%;
+    --accent-foreground: 142 71% 25%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    /* Custom purple for Finaudy brand */
+    --brand-purple: 270 75% 35%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 142 71% 45%;
+
+    /* Financial Categories */
+    --category-food: 25 95% 53%;
+    --category-transport: 221 83% 53%;
+    --category-shopping: 271 81% 56%;
+    --category-bills: 0 84% 60%;
+    --category-entertainment: 262 83% 58%;
+    --category-health: 142 71% 45%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    --gradient-success: linear-gradient(135deg, hsl(var(--success)), hsl(142 71% 55%));
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(142 45% 98%));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-dark)));
+    
+    /* Modal Enhancement Gradients */
+    --gradient-modal-bg: linear-gradient(145deg, hsl(0 0% 100% / 0.95), hsl(142 45% 98% / 0.98));
+    --gradient-income: linear-gradient(135deg, hsl(142 71% 45%), hsl(120 71% 55%));
+    --gradient-expense: linear-gradient(135deg, hsl(0 84% 60%), hsl(15 84% 65%));
+    --gradient-investment: linear-gradient(135deg, hsl(221 83% 53%), hsl(240 83% 60%));
+    --gradient-credit: linear-gradient(135deg, hsl(217 91% 60%), hsl(230 91% 70%));
+    --gradient-warning: linear-gradient(135deg, hsl(38 92% 50%), hsl(45 92% 60%));
+    --gradient-backdrop: linear-gradient(135deg, hsl(240 10% 3% / 0.3), hsl(142 45% 20% / 0.4));
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.1), 0 2px 4px -2px hsl(0 0% 0% / 0.1);
+    --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.1), 0 4px 6px -4px hsl(0 0% 0% / 0.1);
+    --shadow-primary: 0 10px 30px -10px hsl(var(--primary) / 0.3);
+    --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.2);
+    
+    /* Enhanced Modal Shadows */
+    --shadow-modal: 0 25px 50px -12px hsl(0 0% 0% / 0.25), 0 0 0 1px hsl(0 0% 0% / 0.05);
+    --shadow-floating: 0 20px 25px -5px hsl(0 0% 0% / 0.1), 0 10px 10px -5px hsl(0 0% 0% / 0.04);
+    --shadow-income: 0 10px 30px -5px hsl(142 71% 45% / 0.3);
+    --shadow-expense: 0 10px 30px -5px hsl(0 84% 60% / 0.3);
+    --shadow-investment: 0 10px 30px -5px hsl(221 83% 53% / 0.3);
+    --shadow-credit: 0 10px 30px -5px hsl(217 91% 60% / 0.3);
+    --shadow-warning: 0 10px 30px -5px hsl(38 92% 50% / 0.3);
+    --shadow-destructive: 0 10px 30px -5px hsl(0 84% 60% / 0.3);
+
+    /* Animations */
+    --transition-all: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-colors: color 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-modal: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+
+    /* Responsive breakpoints */
+    --container-padding: 1rem;
+    --max-container-width: 1200px;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+
+    --card: 240 6% 10%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 240 6% 10%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 142 71% 45%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 142 71% 55%;
+    --primary-dark: 142 71% 35%;
+
+    --secondary: 240 4% 16%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 240 4% 16%;
+    --muted-foreground: 240 5% 64.9%;
+
+    --accent: 240 4% 16%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    /* Custom purple for Finaudy brand */
+    --brand-purple: 270 75% 35%;
+
+    --border: 240 4% 16%;
+    --input: 240 4% 16%;
+    --ring: 142 71% 45%;
+
+    /* Dark mode gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    --gradient-success: linear-gradient(135deg, hsl(var(--success)), hsl(142 71% 55%));
+    --gradient-card: linear-gradient(135deg, hsl(240 6% 10%), hsl(240 4% 16%));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-dark)));
+
+    --shadow-primary: 0 10px 30px -10px hsl(var(--primary) / 0.4);
+    --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.3);
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  /* Responsive utilities */
+  .container {
+    max-width: var(--max-container-width);
+    padding-left: var(--container-padding);
+    padding-right: var(--container-padding);
+  }
+
+  /* Responsive text sizes */
+  @media (max-width: 640px) {
+    .text-2xl {
+      @apply text-xl;
+    }
+    .text-xl {
+      @apply text-lg;
+    }
+    .text-lg {
+      @apply text-base;
+    }
+  }
+
+  /* Fix layout issues with large values */
+  .financial-value {
+    word-break: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+  }
+
+  /* Improve mobile touch targets */
+  @media (max-width: 640px) {
+    .touch-target {
+      min-height: 44px;
+      min-width: 44px;
+    }
+    
+    .container {
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+    }
+  }
+
+  /* Touch-friendly improvements for mobile devices */
+  @media (hover: none) and (pointer: coarse) {
+    .hover\:opacity-100 {
+      opacity: 1 !important;
+    }
+    
+    button, [role="button"] {
+      min-height: 44px;
+      min-width: 44px;
+    }
+  }
+
+  /* Better focus visibility for accessibility */
+  .focus\:outline-accessible:focus {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+  }
+
+  /* Responsive text sizing */
+  @media (max-width: 640px) {
+    .text-responsive {
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+    }
+  }
+
+  @media (min-width: 640px) {
+    .text-responsive {
+      font-size: 1rem;
+      line-height: 1.5rem;
+    }
+  }
+
+  /* Remove chart selection outline/border - Complete transparent solution */
+  .recharts-wrapper svg *:focus,
+  .recharts-wrapper svg *:focus-visible,
+  .recharts-wrapper svg *:active,
+  .recharts-wrapper svg *:hover:focus {
+    outline: none !important;
+    stroke: transparent !important;
+    stroke-width: 0 !important;
+    fill-opacity: 1 !important;
+  }
+
+  .recharts-pie-sector:focus,
+  .recharts-pie-sector:focus-visible,
+  .recharts-pie-sector:active,
+  .recharts-pie-sector:hover:focus {
+    outline: none !important;
+    stroke: transparent !important;
+    stroke-width: 0 !important;
+    fill-opacity: 1 !important;
+  }
+
+  /* Force transparent stroke on all chart elements */
+  .recharts-pie-sector,
+  .recharts-pie g path,
+  .recharts-pie-sector path {
+    stroke: transparent !important;
+    stroke-width: 0 !important;
+    outline: none !important;
+  }
+
+  .recharts-surface {
+    outline: none !important;
+    stroke: transparent !important;
+  }
+
+  /* Remove focus ring from all chart components */
+  .recharts-wrapper *,
+  .recharts-wrapper *:focus,
+  .recharts-wrapper *:focus-visible,
+  .recharts-wrapper *:active,
+  .recharts-pie *,
+  .recharts-pie *:focus,
+  .recharts-pie *:focus-visible,
+  .recharts-pie *:active {
+    outline: none !important;
+    stroke: transparent !important;
+    stroke-width: 0 !important;
+    box-shadow: none !important;
+  }
+
+  /* Target specific SVG elements */
+  svg.recharts-surface *,
+  svg.recharts-surface path,
+  svg.recharts-surface g,
+  svg.recharts-surface g path {
+    outline: none !important;
+    stroke: transparent !important;
+    stroke-width: 0 !important;
+  }
+
+  /* Remove selection indicators */
+  .recharts-wrapper::selection,
+  .recharts-wrapper *::selection {
+    background: transparent !important;
+  }
+
+  /* Force transparent border on active/selected states */
+  .recharts-pie-sector[tabindex]:focus,
+  .recharts-pie-sector[tabindex]:active {
+    outline: none !important;
+    stroke: transparent !important;
+    stroke-width: 0 !important;
+    border: none !important;
+  }
+}

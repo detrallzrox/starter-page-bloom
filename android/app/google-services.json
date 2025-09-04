@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "462966585677",
+    "project_id": "finaudy-2d764",
+    "storage_bucket": "finaudy-2d764.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:462966585677:android:037f8b1cb97a01f5d45f04",
+        "android_client_info": {
+          "package_name": "com.finaudy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyqZC43cBDA6Kz6N960mGFVn5u_yRKDIc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
